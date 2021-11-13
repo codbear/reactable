@@ -1,12 +1,15 @@
 import { useState } from 'react';
 
-import { getHeaderInitialState } from '../services';
+import { getHeaderInitialState, getRowsInitialState } from '../services';
 
 const useTable = (data, columns) => {
   const headerInitialState = getHeaderInitialState(columns);
   const [header] = useState(headerInitialState);
 
-  return { header };
+  const rowsInitialState = getRowsInitialState(data, columns);
+  const [rows] = useState(rowsInitialState);
+
+  return { header, rows };
 };
 
 export default useTable;

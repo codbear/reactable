@@ -1,7 +1,7 @@
 import useTable from '../../hooks/useTable';
 
 const Table = ({ data, columns }) => {
-  const { header } = useTable(data, columns);
+  const { header, rows } = useTable(data, columns);
 
   return (
     <table>
@@ -16,6 +16,16 @@ const Table = ({ data, columns }) => {
           ))}
         </thead>
       )}
+
+      <tbody>
+        {rows.map((row) => (
+          <tr {...row.props}>
+            {row.cells.map((cell) => (
+              <td {...cell.props}>{cell.value}</td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
     </table>
   );
 };
