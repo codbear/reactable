@@ -1,0 +1,26 @@
+on:
+  pull_request:
+    paths:
+      - '**.js'
+      - '**.jsx'
+name: JS Lint
+
+jobs:
+  lint:
+    name: Lint client
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+
+      - name: Fetch branch master for diff
+        run: |
+          git remote set-branches --add origin main
+          git fetch
+
+      - name: Install
+        run: yarn install
+
+      - name: Run Prettier
+        run: yarn lint
