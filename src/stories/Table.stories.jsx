@@ -8,16 +8,37 @@ export default {
   component: Table,
 };
 
-const Template = (args) => <Table data={tableDataMock} {...args} />;
+const Template = (args) => <Table {...args} />;
 
-export const Basic = Template.bind({});
-Basic.args = { columns: basicColumnsMock };
+export const Default = Template.bind({});
+Default.args = {
+  data: tableDataMock,
+  columns: basicColumnsMock,
+};
 
-export const Sorting = Template.bind({});
-Sorting.args = { columns: sortingColumnsMock };
+export const Filled = Template.bind({});
+Filled.args = {
+  variant: 'filled',
+  color: '#c7c7c7',
+  headerTextColor: '#000000',
+  data: tableDataMock,
+  columns: basicColumnsMock,
+};
 
 export const Filtering = Template.bind({});
-Sorting.args = { columns: basicColumnsMock };
+Filtering.args = {
+  data: tableDataMock,
+  columns: basicColumnsMock,
+};
+
+export const Sorting = Template.bind({});
+Sorting.args = {
+  data: tableDataMock,
+  columns: sortingColumnsMock,
+};
 
 export const Pagination = Template.bind({});
-Sorting.args = { columns: basicColumnsMock };
+Pagination.args = {
+  data: tableDataMock,
+  columns: basicColumnsMock,
+};
