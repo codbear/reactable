@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "author": "codbear (https://github.com/codbear)",
   "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "keywords": [
+    "react",
+    "table"
+  ],
   "license": "GPL-3.0",
   "homepage": "https://github.com/monatheoctocat/my_package",
   "repository": {
@@ -14,13 +18,18 @@
   },
   "main": "dist/index.js",
   "module": "dist/index.js",
-  "files": [ "dist", "README.md" ],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "dependencies": {
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "styled-components": "^5.3.3"
   },
   "devDependencies": {
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.16.0",
     "@storybook/addon-actions": "^6.3.12",
     "@storybook/addon-essentials": "^6.3.12",
     "@storybook/addon-links": "^6.3.12",
@@ -30,7 +39,6 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
-    "babel-cli": "^6.26.0",
     "prettier": "^2.4.1",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3"
@@ -69,6 +77,11 @@
   "prettier": {
     "printWidth": 100,
     "singleQuote": true
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-react"
+    ]
   },
   "browserslist": {
     "production": [
