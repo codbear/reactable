@@ -8,7 +8,7 @@
     "table"
   ],
   "license": "GPL-3.0",
-  "homepage": "https://github.com/monatheoctocat/my_package",
+  "homepage": "https://codbear.github.io/reactable",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/codbear/reactable.git"
@@ -39,6 +39,7 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "gh-pages": "^3.2.3",
     "prettier": "^2.4.1",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3"
@@ -53,10 +54,11 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "yarn prettier:check && eslint --ext js,jsx",
+    "prettier:check": "prettier --check 'src/**/*.{js,jsx}'",
+    "prettier:write": "prettier --write 'src/**/*.{js,jsx}'",
     "storybook:start": "start-storybook -p 6006 -s public",
     "storybook:build": "build-storybook -s public",
-    "prettier:check": "prettier --check 'src/**/*.{js,jsx}'",
-    "prettier:write": "prettier --write 'src/**/*.{js,jsx}'"
+    "storybook:deploy": "gh-pages -d storybook-static"
   },
   "eslintConfig": {
     "extends": [
