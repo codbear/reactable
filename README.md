@@ -44,5 +44,5 @@ const superHerosColumns = [
   },
 ];
 
-const SuperHerosTable = () => (<Table data={superHerosData} columns={}/>)
+const SuperHerosTable = () => (<Table data={superHerosData} columns={superHerosColumns}/>)
 ```

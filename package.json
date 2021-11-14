@@ -2,7 +2,7 @@
   "name": "@codbear/reactable",
   "version": "0.1.0",
   "author": "codbear (https://github.com/codbear)",
-  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "description": "Create data tables with React",
   "keywords": [
     "react",
     "table"
