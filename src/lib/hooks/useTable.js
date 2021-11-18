@@ -1,15 +1,27 @@
-import { useState } from 'react';
+import { useMemo, useReducer } from 'react';
 
-import { getHeaderInitialState, getRowsInitialState } from '../services';
+import { getColumnsInitialState, getRowsInitialState } from '../services';
+import { tableReducer } from '../reducers';
+import useSorting from './useSorting';
 
 const useTable = (data, columns) => {
-  const headerInitialState = getHeaderInitialState(columns);
-  const [header] = useState(headerInitialState);
+  const initialState = useMemo(
+    () => ({
+      columns: getColumnsInitialState(columns),
+      rows: getRowsInitialState(data, columns),
+    }),
+    [columns, data]
+  );
 
-  const rowsInitialState = getRowsInitialState(data, columns);
-  const [rows] = useState(rowsInitialState);
+  const [state, dispatch] = useReducer(tableReducer, initialState);
 
-  return { header, rows };
+  useSorting(state, dispatch, initialState.rows);
+
+  return {
+    hasHeader: state.columns.some((column) => Boolean(column.header.value)),
+    columns: state.columns,
+    rows: state.rows,
+  };
 };
 
 export default useTable;
