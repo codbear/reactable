@@ -112,7 +112,7 @@ const Table = ({
             <thead>
               <TableHeaderRow>
                 {columns.map((column) => (
-                  <TableCellHeader column={column} onSort={onSort} />
+                  <TableCellHeader column={column} onSort={onSort} {...column.props.header} />
                 ))}
               </TableHeaderRow>
             </thead>

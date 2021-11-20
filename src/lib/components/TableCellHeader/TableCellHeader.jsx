@@ -66,7 +66,7 @@ const TableCellHeader = ({ column, onSort }) => {
   };
 
   return (
-    <StyledTableCellHeader as="th" {...props.header}>
+    <StyledTableCellHeader as="th">
       {isSortable ? (
         <SortingButton onClick={handleSort} {...props.sortingButton}>
           {value}
