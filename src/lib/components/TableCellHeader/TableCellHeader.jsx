@@ -1,8 +1,8 @@
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import TableCell from '../TableCell';
 import SortIcon from '../SortIcon';
-import PropTypes from 'prop-types';
 import { SORTING_ORDER_STATES } from '../../constants';
 
 const propTypes = {

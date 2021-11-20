@@ -1,8 +1,9 @@
+import PropTypes from 'prop-types';
+
 import UnsortedIcon from '../UnsortedIcon';
 import SortedAscIcon from '../SortedAscIcon';
 import SortedDescIcon from '../SortedDescIcon';
 import { SORTING_ORDER_STATES } from '../../constants';
-import PropTypes from 'prop-types';
 
 const propTypes = {
   sortingOrder: PropTypes.oneOfType([
