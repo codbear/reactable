@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import styled, { ThemeProvider } from 'styled-components';
 
-import { useTable } from '../../hooks';
+import { useTable, useSorting as useDefaultSorting } from '../../hooks';
 import TableCell from '../TableCell';
 import TableCellHeader from '../TableCellHeader';
 
@@ -14,6 +14,7 @@ const propTypes = {
   columns: PropTypes.arrayOf(
     PropTypes.shape({
       dataField: PropTypes.string.isRequired,
+      isSortable: PropTypes.bool,
     })
   ).isRequired,
 
@@ -22,12 +23,15 @@ const propTypes = {
   color: PropTypes.string,
 
   headerTextColor: PropTypes.string,
+
+  useSorting: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
 };
 
 const defaultProps = {
   variant: 'outlined',
   color: '#c7c7c7',
   headerTextColor: '#000000',
+  useSorting: false,
 };
 
 const TableWrapper = styled.div`
@@ -82,7 +86,21 @@ const Table = ({
     [color, headerTextColor]
   );
 
-  const { columns, rows, hasHeader, onSort } = useTable(data, userDefinedColumns);
+  const registeredServices = useMemo(() => {
+    const shouldUseSorting = useSorting !== false;
+    const shouldUseCustomSorting = shouldUseSorting && typeof useSorting === 'function';
+    const sortingHook = shouldUseCustomSorting ? useSorting : useDefaultSorting;
+
+    return {
+      ...(shouldUseSorting ? { useSorting: sortingHook } : {}),
+    };
+  }, [useSorting]);
+
+  const { columns, rows, hasHeader, onSort } = useTable(
+    data,
+    userDefinedColumns,
+    registeredServices
+  );
 
   const TableHeaderRow = variantToTableHeaderRow[variant];
 

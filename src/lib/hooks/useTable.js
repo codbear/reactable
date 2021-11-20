@@ -1,9 +1,10 @@
 import { useState } from 'react';
 
 import { getColumnsInitialState, getColumnsNextState, getRowsInitialState } from '../services';
-import useSorting from './useSorting';
 
-const useTable = (data, userDefinedColumns) => {
+const voidUseSorting = () => () => {};
+
+const useTable = (data, userDefinedColumns, { useSorting = voidUseSorting }) => {
   const [columns, setColumns] = useState(getColumnsInitialState(userDefinedColumns));
   const [rows, setRows] = useState(getRowsInitialState(data, userDefinedColumns));
 
@@ -20,7 +21,7 @@ const useTable = (data, userDefinedColumns) => {
     setRows(nextRowsState);
   };
 
-  const { onSort } = useSorting(handleSetRows, onColumnOrder);
+  const onSort = useSorting(handleSetRows, onColumnOrder);
 
   return {
     hasHeader: columns.some((column) => Boolean(column.header.value)),

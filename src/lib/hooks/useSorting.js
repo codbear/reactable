@@ -59,7 +59,7 @@ const useSorting = (onRowsSort, onColumnOrder) => {
     }
   };
 
-  return { onSort: handleSort };
+  return handleSort;
 };
 
 export default useSorting;
