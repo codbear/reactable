@@ -1,80 +1,65 @@
-import { useEffect, useReducer } from 'react';
+import { useState } from 'react';
 
-import { getDecoratedSortingColumn, getSortedRows } from '../services';
-import { sortingInitialState, sortingReducer } from '../reducers';
-import {
-  disableSorting,
-  initSortingForColumn,
-  reverseSorting,
-  setRows,
-  setSortedRows,
-  setSortingColumns,
-  updateSortingColumn,
-} from '../actions';
+import { getSortRows } from '../services';
+import { SORTING_ORDER_STATES } from '../constants';
 
-const useSorting = (state, dispatch, rowsInitialState) => {
-  const [sortingState, dispatchSortingState] = useReducer(sortingReducer, sortingInitialState);
+const useSorting = (onRowsSort, onColumnOrder) => {
+  const [sortingColumn, setSortingColumn] = useState();
+  const [sortingOrder, setSortingOrder] = useState(SORTING_ORDER_STATES.DEFAULT);
+
+  const initSorting = (columnKey) => {
+    setSortingColumn(columnKey);
+    setSortingOrder(SORTING_ORDER_STATES.DEFAULT);
+
+    onColumnOrder(columnKey, SORTING_ORDER_STATES.DEFAULT);
+
+    return SORTING_ORDER_STATES.DEFAULT;
+  };
+
+  const reverseSorting = () => {
+    const nextSortingOrder =
+      sortingOrder === SORTING_ORDER_STATES.ASCENDANT
+        ? SORTING_ORDER_STATES.DESCENDANT
+        : SORTING_ORDER_STATES.ASCENDANT;
+
+    setSortingOrder(nextSortingOrder);
+
+    onColumnOrder(sortingColumn, nextSortingOrder);
+
+    return nextSortingOrder;
+  };
+
+  const disableSorting = () => {
+    setSortingColumn(null);
+    setSortingOrder(SORTING_ORDER_STATES.DEFAULT);
+
+    onColumnOrder(null, null);
+  };
 
   const handleSort = (columnKey) => {
-    dispatch(updateSortingColumn());
-    const isColumnCurrentlySorted = sortingState.currentSortingColumn === columnKey;
+    if (sortingColumn !== columnKey) {
+      const sortingOrder = initSorting(columnKey);
+      const sortRows = getSortRows(columnKey, sortingOrder);
 
-    if (!isColumnCurrentlySorted) {
-      return dispatchSortingState(initSortingForColumn(columnKey));
+      return onRowsSort(sortRows);
     }
 
-    if (sortingState.isCurrentColumnSortedAsc) {
-      return dispatchSortingState(reverseSorting());
+    if (sortingOrder === SORTING_ORDER_STATES.ASCENDANT) {
+      // TODO: Can I be sure the state will be updated before I call getSortRows?
+      const nextSortingOrder = reverseSorting();
+      const sortRows = getSortRows(sortingColumn, nextSortingOrder);
+
+      return onRowsSort(sortRows);
     }
 
-    if (sortingState.isCurrentColumnSortedDesc) {
-      return dispatchSortingState(disableSorting());
+    if (sortingOrder === SORTING_ORDER_STATES.DESCENDANT) {
+      disableSorting();
+
+      return onRowsSort();
     }
   };
 
-  if (!state.hasDecoratedSortingColumns) {
-    const decoratedColumns = state.columns.map((column) => {
-      if (!column.isSortable) {
-        return column;
-      }
-
-      return getDecoratedSortingColumn(column, handleSort, sortingState);
-    });
-
-    dispatch(setSortingColumns(decoratedColumns));
-  }
-
-  useEffect(() => {
-    const currentSortingColumn = sortingState.currentSortingColumn;
-
-    if (!currentSortingColumn) {
-      return dispatch(setRows(rowsInitialState));
-    }
-
-    const currentSortingOrder = sortingState.isCurrentColumnSortedAsc ? 'asc' : 'desc';
-    const shouldUpdateSortingColumn = state.sortingColumn !== sortingState.currentSortingColumn;
-
-    if (shouldUpdateSortingColumn) {
-      const sortedRows = getSortedRows(state.rows, currentSortingColumn);
-
-      return dispatch(setSortedRows(sortedRows, currentSortingColumn, currentSortingOrder));
-    }
-
-    const shouldUpdateSortingOrder = state.sortingOrder !== currentSortingOrder;
-
-    if (shouldUpdateSortingOrder) {
-      const sortedRows = getSortedRows(state.rows);
-
-      dispatch(setSortedRows(sortedRows, currentSortingColumn, currentSortingOrder));
-    }
-  }, [
-    dispatch,
-    rowsInitialState,
-    sortingState,
-    state.rows,
-    state.sortingColumn,
-    state.sortingOrder,
-  ]);
+  return { onSort: handleSort };
 };
 
 export default useSorting;

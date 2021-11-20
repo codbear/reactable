@@ -1,26 +1,32 @@
-import { useMemo, useReducer } from 'react';
+import { useState } from 'react';
 
-import { getColumnsInitialState, getRowsInitialState } from '../services';
-import { tableReducer } from '../reducers';
+import { getColumnsInitialState, getColumnsNextState, getRowsInitialState } from '../services';
 import useSorting from './useSorting';
 
-const useTable = (data, columns) => {
-  const initialState = useMemo(
-    () => ({
-      columns: getColumnsInitialState(columns),
-      rows: getRowsInitialState(data, columns),
-    }),
-    [columns, data]
-  );
+const useTable = (data, userDefinedColumns) => {
+  const [columns, setColumns] = useState(getColumnsInitialState(userDefinedColumns));
+  const [rows, setRows] = useState(getRowsInitialState(data, userDefinedColumns));
 
-  const [state, dispatch] = useReducer(tableReducer, initialState);
+  const onColumnOrder = (sortingColumn, sortingOrder) => {
+    const nextColumnState = getColumnsNextState(columns, { sortingColumn, sortingOrder });
+    setColumns(nextColumnState);
+  };
 
-  useSorting(state, dispatch, initialState.rows);
+  const handleSetRows = (rowsAdapter) => {
+    const rowsInitialState = getRowsInitialState(data, userDefinedColumns);
+    const shouldAdaptRows = typeof rowsAdapter === 'function';
+    const nextRowsState = shouldAdaptRows ? rowsAdapter(rowsInitialState) : rowsInitialState;
+
+    setRows(nextRowsState);
+  };
+
+  const { onSort } = useSorting(handleSetRows, onColumnOrder);
 
   return {
-    hasHeader: state.columns.some((column) => Boolean(column.header.value)),
-    columns: state.columns,
-    rows: state.rows,
+    hasHeader: columns.some((column) => Boolean(column.header.value)),
+    columns,
+    rows,
+    onSort,
   };
 };
 

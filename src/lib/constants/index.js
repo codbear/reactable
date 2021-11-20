@@ -1,1 +1,1 @@
-export { default as actionTypes } from './actionTypes';
+export { default as SORTING_ORDER_STATES } from './sortingOrderStates';

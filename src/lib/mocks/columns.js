@@ -17,16 +17,15 @@ export const sortingColumnsMock = [
   {
     header: 'Super Hero',
     dataField: 'name',
-    sortable: true,
+    isSortable: true,
   },
   {
     header: 'Secret identity',
     dataField: 'secretIdentity',
-    sortable: true,
   },
   {
     header: 'Age',
     dataField: 'age',
-    sortable: true,
+    isSortable: true,
   },
 ];
