@@ -1,8 +1,10 @@
-import styled, { ThemeProvider } from 'styled-components';
-import PropTypes from 'prop-types';
-
-import useTable from '../../hooks/useTable';
 import { useMemo } from 'react';
+import PropTypes from 'prop-types';
+import styled, { ThemeProvider } from 'styled-components';
+
+import { useTable } from '../../hooks';
+import TableCell from '../TableCell';
+import TableCellHeader from '../TableCellHeader';
 
 const propTypes = {
   data: PropTypes.arrayOf(
@@ -55,23 +57,19 @@ const TableHeaderRowFilled = styled(TableHeaderRowOutlined)`
   background-color: ${({ theme }) => theme.palette.primary};
 `;
 
-const TableCell = styled.td`
-  padding: 6px 16px;
-  border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
-`;
-
-const TableHeaderCell = styled(TableCell)`
-  color: ${({ theme }) => theme.palette.text};
-  text-align: left;
-  white-space: nowrap;
-`;
-
 const variantToTableHeaderRow = {
   outlined: TableHeaderRowOutlined,
   filled: TableHeaderRowFilled,
 };
 
-const Table = ({ data, columns, variant, color, headerTextColor }) => {
+const Table = ({
+  data,
+  columns: userDefinedColumns,
+  variant,
+  color,
+  headerTextColor,
+  useSorting,
+}) => {
   const theme = useMemo(
     () => ({
       palette: {
@@ -84,7 +82,7 @@ const Table = ({ data, columns, variant, color, headerTextColor }) => {
     [color, headerTextColor]
   );
 
-  const { header, rows } = useTable(data, columns);
+  const { columns, rows, hasHeader, onSort } = useTable(data, userDefinedColumns);
 
   const TableHeaderRow = variantToTableHeaderRow[variant];
 
@@ -92,17 +90,13 @@ const Table = ({ data, columns, variant, color, headerTextColor }) => {
     <ThemeProvider theme={theme}>
       <TableWrapper>
         <TableContainer>
-          {header && (
+          {hasHeader && (
             <thead>
-              {header.rows.map((row) => (
-                <TableHeaderRow {...row.props}>
-                  {row.cells.map((cell) => (
-                    <TableHeaderCell as="th" {...cell.props}>
-                      {cell.value}
-                    </TableHeaderCell>
-                  ))}
-                </TableHeaderRow>
-              ))}
+              <TableHeaderRow>
+                {columns.map((column) => (
+                  <TableCellHeader column={column} onSort={onSort} />
+                ))}
+              </TableHeaderRow>
             </thead>
           )}
 
