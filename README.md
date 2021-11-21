@@ -82,3 +82,17 @@ const SuperHerosTable = () => (
 )
 ```
 [View demo in StoryBook](https://codbear.github.io/reactable/?path=/story/table--sorting)
+
+## Roadmap
+
+![Sorting](https://img.shields.io/badge/sorting-done-success?style=for-the-badge)
+
+![Pagination](https://img.shields.io/badge/pagination-next-critical?style=for-the-badge)
+
+![Global filtering](https://img.shields.io/badge/table_global_filtering-later-important?style=for-the-badge)
+
+![Column filtering](https://img.shields.io/badge/column_filtering-backlog-informational?style=for-the-badge)
+
+![Row selection](https://img.shields.io/badge/row_selection-backlog-informational?style=for-the-badge)
+
+![Column grouping](https://img.shields.io/badge/column_grouping-backlog-informational?style=for-the-badge)
