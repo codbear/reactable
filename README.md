@@ -59,6 +59,10 @@ const SuperHerosTable = () => (
 ### Sorting
 
 Define which columns are sortable and set `useSorting` to true in `Table`.
+
+![Sorting](https://img.shields.io/badge/warning-critical?style=flat-square)
+Reactable uses hooks under the hood to handle sorting. Please keep `useSorting` constant over renders
+
 ```jsx
 const superHerosColumns = [
   {
