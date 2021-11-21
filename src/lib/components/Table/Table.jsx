@@ -1,8 +1,10 @@
-import styled, { ThemeProvider } from 'styled-components';
-import PropTypes from 'prop-types';
-
-import useTable from '../../hooks/useTable';
 import { useMemo } from 'react';
+import PropTypes from 'prop-types';
+import styled, { ThemeProvider } from 'styled-components';
+
+import { useTable, useSorting as useDefaultSorting } from '../../hooks';
+import TableCell from '../TableCell';
+import TableCellHeader from '../TableCellHeader';
 
 const propTypes = {
   data: PropTypes.arrayOf(
@@ -12,6 +14,7 @@ const propTypes = {
   columns: PropTypes.arrayOf(
     PropTypes.shape({
       dataField: PropTypes.string.isRequired,
+      isSortable: PropTypes.bool,
     })
   ).isRequired,
 
@@ -20,12 +23,15 @@ const propTypes = {
   color: PropTypes.string,
 
   headerTextColor: PropTypes.string,
+
+  useSorting: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
 };
 
 const defaultProps = {
   variant: 'outlined',
   color: '#c7c7c7',
   headerTextColor: '#000000',
+  useSorting: false,
 };
 
 const TableWrapper = styled.div`
@@ -55,23 +61,19 @@ const TableHeaderRowFilled = styled(TableHeaderRowOutlined)`
   background-color: ${({ theme }) => theme.palette.primary};
 `;
 
-const TableCell = styled.td`
-  padding: 6px 16px;
-  border-bottom: 1px solid ${({ theme }) => theme.palette.divider};
-`;
-
-const TableHeaderCell = styled(TableCell)`
-  color: ${({ theme }) => theme.palette.text};
-  text-align: left;
-  white-space: nowrap;
-`;
-
 const variantToTableHeaderRow = {
   outlined: TableHeaderRowOutlined,
   filled: TableHeaderRowFilled,
 };
 
-const Table = ({ data, columns, variant, color, headerTextColor }) => {
+const Table = ({
+  data,
+  columns: userDefinedColumns,
+  variant,
+  color,
+  headerTextColor,
+  useSorting,
+}) => {
   const theme = useMemo(
     () => ({
       palette: {
@@ -84,7 +86,21 @@ const Table = ({ data, columns, variant, color, headerTextColor }) => {
     [color, headerTextColor]
   );
 
-  const { header, rows } = useTable(data, columns);
+  const registeredServices = useMemo(() => {
+    const shouldUseSorting = useSorting !== false;
+    const shouldUseCustomSorting = shouldUseSorting && typeof useSorting === 'function';
+    const sortingHook = shouldUseCustomSorting ? useSorting : useDefaultSorting;
+
+    return {
+      ...(shouldUseSorting ? { useSorting: sortingHook } : {}),
+    };
+  }, [useSorting]);
+
+  const { columns, rows, hasHeader, onSort } = useTable(
+    data,
+    userDefinedColumns,
+    registeredServices
+  );
 
   const TableHeaderRow = variantToTableHeaderRow[variant];
 
@@ -92,17 +108,13 @@ const Table = ({ data, columns, variant, color, headerTextColor }) => {
     <ThemeProvider theme={theme}>
       <TableWrapper>
         <TableContainer>
-          {header && (
+          {hasHeader && (
             <thead>
-              {header.rows.map((row) => (
-                <TableHeaderRow {...row.props}>
-                  {row.cells.map((cell) => (
-                    <TableHeaderCell as="th" {...cell.props}>
-                      {cell.value}
-                    </TableHeaderCell>
-                  ))}
-                </TableHeaderRow>
-              ))}
+              <TableHeaderRow>
+                {columns.map((column) => (
+                  <TableCellHeader column={column} onSort={onSort} {...column.props.header} />
+                ))}
+              </TableHeaderRow>
             </thead>
           )}
 

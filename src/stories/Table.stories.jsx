@@ -35,6 +35,7 @@ export const Sorting = Template.bind({});
 Sorting.args = {
   data: tableDataMock,
   columns: sortingColumnsMock,
+  useSorting: true,
 };
 
 export const Pagination = Template.bind({});

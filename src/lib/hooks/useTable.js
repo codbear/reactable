@@ -1,15 +1,34 @@
 import { useState } from 'react';
 
-import { getHeaderInitialState, getRowsInitialState } from '../services';
+import { getColumnsInitialState, getColumnsNextState, getRowsInitialState } from '../services';
 
-const useTable = (data, columns) => {
-  const headerInitialState = getHeaderInitialState(columns);
-  const [header] = useState(headerInitialState);
+const voidUseSorting = () => () => {};
 
-  const rowsInitialState = getRowsInitialState(data, columns);
-  const [rows] = useState(rowsInitialState);
+const useTable = (data, userDefinedColumns, { useSorting = voidUseSorting }) => {
+  const [columns, setColumns] = useState(getColumnsInitialState(userDefinedColumns));
+  const [rows, setRows] = useState(getRowsInitialState(data, userDefinedColumns));
 
-  return { header, rows };
+  const onColumnOrder = (sortingColumn, sortingOrder) => {
+    const nextColumnState = getColumnsNextState(columns, { sortingColumn, sortingOrder });
+    setColumns(nextColumnState);
+  };
+
+  const handleSetRows = (rowsAdapter) => {
+    const rowsInitialState = getRowsInitialState(data, userDefinedColumns);
+    const shouldAdaptRows = typeof rowsAdapter === 'function';
+    const nextRowsState = shouldAdaptRows ? rowsAdapter(rowsInitialState) : rowsInitialState;
+
+    setRows(nextRowsState);
+  };
+
+  const onSort = useSorting(handleSetRows, onColumnOrder);
+
+  return {
+    hasHeader: columns.some((column) => Boolean(column.header.value)),
+    columns,
+    rows,
+    onSort,
+  };
 };
 
 export default useTable;
