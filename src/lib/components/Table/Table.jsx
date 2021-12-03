@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import styled, { ThemeProvider } from 'styled-components';
 
-import { useTable, useSorting as useDefaultSorting } from '../../hooks';
+import { useTable, useSorting, usePagination } from '../../hooks';
 import TableCell from '../TableCell';
 import TableCellHeader from '../TableCellHeader';
 
@@ -10,28 +10,27 @@ const propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number]))
   ).isRequired,
-
   columns: PropTypes.arrayOf(
     PropTypes.shape({
       dataField: PropTypes.string.isRequired,
       isSortable: PropTypes.bool,
     })
   ).isRequired,
-
   variant: PropTypes.oneOf(['filled', 'outlined']),
-
   color: PropTypes.string,
-
   headerTextColor: PropTypes.string,
-
-  useSorting: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
+  shouldUseSorting: PropTypes.bool,
+  shouldUsePagination: PropTypes.bool,
+  itemsPerPage: PropTypes.number,
 };
 
 const defaultProps = {
   variant: 'outlined',
   color: '#c7c7c7',
   headerTextColor: '#000000',
-  useSorting: false,
+  shouldUseSorting: false,
+  shouldUsePagination: false,
+  itemsPerPage: 0,
 };
 
 const TableWrapper = styled.div`
@@ -72,7 +71,9 @@ const Table = ({
   variant,
   color,
   headerTextColor,
-  useSorting,
+  shouldUseSorting,
+  shouldUsePagination,
+  itemsPerPage,
 }) => {
   const theme = useMemo(
     () => ({
@@ -87,14 +88,11 @@ const Table = ({
   );
 
   const registeredServices = useMemo(() => {
-    const shouldUseSorting = useSorting !== false;
-    const shouldUseCustomSorting = shouldUseSorting && typeof useSorting === 'function';
-    const sortingHook = shouldUseCustomSorting ? useSorting : useDefaultSorting;
-
     return {
-      ...(shouldUseSorting ? { useSorting: sortingHook } : {}),
+      ...(shouldUseSorting ? { useSorting } : {}),
+      ...(shouldUsePagination ? { usePagination, itemsPerPage } : {}),
     };
-  }, [useSorting]);
+  }, [itemsPerPage, shouldUsePagination, shouldUseSorting]);
 
   const { columns, rows, hasHeader, onSort } = useTable(
     data,
