@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-import { getSortRows } from '../services';
 import { SORTING_ORDER_STATES } from '../constants';
 
 const useSorting = (onRowsSort, onColumnOrder) => {
@@ -36,20 +35,17 @@ const useSorting = (onRowsSort, onColumnOrder) => {
     onColumnOrder(null, null);
   };
 
-  const handleSort = (columnKey) => {
+  const onSort = (columnKey) => {
     if (sortingColumn !== columnKey) {
       const sortingOrder = initSorting(columnKey);
-      const sortRows = getSortRows(columnKey, sortingOrder);
 
-      return onRowsSort(sortRows);
+      return onRowsSort(columnKey, sortingOrder);
     }
 
     if (sortingOrder === SORTING_ORDER_STATES.ASCENDANT) {
-      // TODO: Can I be sure the state will be updated before I call getSortRows?
       const nextSortingOrder = reverseSorting();
-      const sortRows = getSortRows(sortingColumn, nextSortingOrder);
 
-      return onRowsSort(sortRows);
+      return onRowsSort(sortingColumn, nextSortingOrder);
     }
 
     if (sortingOrder === SORTING_ORDER_STATES.DESCENDANT) {
@@ -59,7 +55,7 @@ const useSorting = (onRowsSort, onColumnOrder) => {
     }
   };
 
-  return handleSort;
+  return { onSort };
 };
 
 export default useSorting;

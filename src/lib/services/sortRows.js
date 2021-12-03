@@ -28,7 +28,7 @@ const sortingOrderToComparisonFunction = {
   [SORTING_ORDER_STATES.DESCENDANT]: compareLowerThan,
 };
 
-const getSortRows = (sortingColumn, sortingOrder) => (rows) => {
+const sortRows = (sortingColumn, sortingOrder, rows) => {
   const comparisonFunction = sortingOrderToComparisonFunction[sortingOrder];
 
   if (!comparisonFunction) {
@@ -56,4 +56,4 @@ const getSortRows = (sortingColumn, sortingOrder) => (rows) => {
   return minifiedRows.map((row) => rows[row.index]);
 };
 
-export default getSortRows;
+export default sortRows;
