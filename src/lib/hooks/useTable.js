@@ -12,7 +12,7 @@ const useTable = (
   userDefinedColumns,
   {
     useSorting = () => ({ onSort: () => {} }),
-    usePagination = () => ({ pageFirstRowIndex: 0, pageLastRowIndex: 0 }),
+    usePagination = () => ({ pageFirstRowIndex: 0, pageLastRowIndex: 0, goToFirstPage: () => {} }),
     itemsPerPage = 0,
   }
 ) => {
@@ -29,13 +29,11 @@ const useTable = (
     numberOfItems: tableInitialState.rows.length,
   });
 
-  const onColumnOrder = (sortingColumn, sortingOrder) => {
+  const onSortRows = (sortingColumn, sortingOrder) => {
+    pagination.goToFirstPage();
+
     const nextColumnState = getColumnsNextState(columns, { sortingColumn, sortingOrder });
     setColumns(nextColumnState);
-  };
-
-  const onRowsSort = (sortingColumn, sortingOrder) => {
-    pagination.goToFirstPage();
 
     const shouldSortRows = Boolean(sortingColumn) && Boolean(sortingOrder);
 
@@ -46,7 +44,7 @@ const useTable = (
     setSorting({ column: sortingColumn, order: sortingOrder });
   };
 
-  const { onSort } = useSorting(onRowsSort, onColumnOrder);
+  const { onSort } = useSorting(onSortRows);
 
   let rows = sortRows(sorting.column, sorting.order, tableInitialState.rows);
 

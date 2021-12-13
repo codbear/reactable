@@ -51,6 +51,7 @@ const usePagination = ({ itemsPerPage, numberOfItems }) => {
   }, [currentPage]);
 
   return {
+    numberOfItems,
     currentPage,
     numberOfPages,
     goToPage,
