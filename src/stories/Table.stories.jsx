@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import Table from '../lib/components/Table';
 import { tableDataMock, basicColumnsMock, sortingColumnsMock } from '../lib/mocks';
@@ -36,13 +36,4 @@ Sorting.args = {
   data: tableDataMock,
   columns: sortingColumnsMock,
   shouldUseSorting: true,
-};
-
-export const Pagination = Template.bind({});
-Pagination.args = {
-  data: tableDataMock,
-  columns: sortingColumnsMock,
-  shouldUseSorting: true,
-  shouldUsePagination: true,
-  itemsPerPage: 5,
 };
