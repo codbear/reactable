@@ -1,10 +1,12 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled, { ThemeProvider } from 'styled-components';
 
 import { useTable, useSorting, usePagination } from '../../hooks';
+import { TableContext } from '../../contexts';
 import TableCell from '../TableCell';
 import TableCellHeader from '../TableCellHeader';
+import Paginator from '../Paginator';
 
 const propTypes = {
   data: PropTypes.arrayOf(
@@ -38,7 +40,7 @@ const TableWrapper = styled.div`
   overflow: auto;
 `;
 
-const TableContainer = styled.table`
+const StyledTable = styled.table`
   width: 100%;
   border: 1px solid ${({ theme }) => theme.palette.divider};
   border-collapse: collapse;
@@ -74,6 +76,7 @@ const Table = ({
   shouldUseSorting,
   shouldUsePagination,
   itemsPerPage,
+  onChangeItemsPerPage,
 }) => {
   const theme = useMemo(
     () => ({
@@ -94,7 +97,7 @@ const Table = ({
     };
   }, [itemsPerPage, shouldUsePagination, shouldUseSorting]);
 
-  const { columns, rows, hasHeader, onSort } = useTable(
+  const { columns, rows, hasHeader, onSort, pagination } = useTable(
     data,
     userDefinedColumns,
     registeredServices
@@ -104,29 +107,33 @@ const Table = ({
 
   return (
     <ThemeProvider theme={theme}>
-      <TableWrapper>
-        <TableContainer>
-          {hasHeader && (
-            <thead>
-              <TableHeaderRow>
-                {columns.map((column) => (
-                  <TableCellHeader column={column} onSort={onSort} {...column.props.header} />
-                ))}
-              </TableHeaderRow>
-            </thead>
-          )}
+      <TableContext.Provider value={{ onSort, pagination, onChangeItemsPerPage }}>
+        <TableWrapper>
+          <StyledTable>
+            {hasHeader && (
+              <thead>
+                <TableHeaderRow>
+                  {columns.map((column) => (
+                    <TableCellHeader column={column} {...column.props.header} />
+                  ))}
+                </TableHeaderRow>
+              </thead>
+            )}
 
-          <tbody>
-            {rows.map((row) => (
-              <TableRow {...row.props}>
-                {row.cells.map((cell) => (
-                  <TableCell {...cell.props}>{cell.value}</TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </tbody>
-        </TableContainer>
-      </TableWrapper>
+            <tbody>
+              {rows.map((row) => (
+                <TableRow {...row.props}>
+                  {row.cells.map((cell) => (
+                    <TableCell {...cell.props}>{cell.value}</TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </tbody>
+          </StyledTable>
+
+          {shouldUsePagination && <Paginator />}
+        </TableWrapper>
+      </TableContext.Provider>
     </ThemeProvider>
   );
 };
