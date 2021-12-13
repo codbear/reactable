@@ -2,8 +2,8 @@ import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
+import SortIcon from '../../icons/SortIcon';
 import TableCell from '../TableCell';
-import SortIcon from '../SortIcon';
 import { SORTING_ORDER_STATES } from '../../constants';
 import { TableContext } from '../../contexts';
 
