@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from 'react';
+import { useState } from 'react';
 
 import {
   getColumnsInitialState,
@@ -16,16 +16,18 @@ const useTable = (
     itemsPerPage = 0,
   }
 ) => {
-  // TODO: useState or useMemo ? or else ?
-  const [tableInitialState] = useState({
+  const tableInitialState = {
     columns: getColumnsInitialState(userDefinedColumns),
     rows: getRowsInitialState(data, userDefinedColumns),
-  });
+  };
 
   const [columns, setColumns] = useState(tableInitialState.columns);
-  const [rows, setRows] = useState(tableInitialState.rows);
-  // TODO: meh...
-  const [shouldUpdatePage, setShouldUpdatePage] = useState(true);
+  const [sorting, setSorting] = useState({ column: null, order: null });
+
+  const pagination = usePagination({
+    itemsPerPage,
+    numberOfItems: tableInitialState.rows.length,
+  });
 
   const onColumnOrder = (sortingColumn, sortingOrder) => {
     const nextColumnState = getColumnsNextState(columns, { sortingColumn, sortingOrder });
@@ -33,38 +35,26 @@ const useTable = (
   };
 
   const onRowsSort = (sortingColumn, sortingOrder) => {
-    setShouldUpdatePage(true);
+    pagination.goToFirstPage();
 
     const shouldSortRows = Boolean(sortingColumn) && Boolean(sortingOrder);
 
     if (!shouldSortRows) {
-      return setRows(tableInitialState.rows);
+      return setSorting({ column: null, order: null });
     }
 
-    const nextRowsState = sortRows(sortingColumn, sortingOrder, tableInitialState.rows);
-
-    setRows(nextRowsState);
+    setSorting({ column: sortingColumn, order: sortingOrder });
   };
 
   const { onSort } = useSorting(onRowsSort, onColumnOrder);
 
-  const { pageFirstRowIndex, pageLastRowIndex, ...pagination } = usePagination({
-    itemsPerPage,
-    numberOfItems: tableInitialState.rows.length,
-  });
+  let rows = sortRows(sorting.column, sorting.order, tableInitialState.rows);
 
-  useLayoutEffect(() => {
-    const isPaginated = Boolean(pageLastRowIndex);
+  const isPaginated = Boolean(pagination.pageLastRowIndex);
 
-    if (!isPaginated || !shouldUpdatePage) {
-      return;
-    }
-
-    const nextRowsState = rows.slice(pageFirstRowIndex, pageLastRowIndex);
-
-    setRows(nextRowsState);
-    setShouldUpdatePage(false);
-  }, [pageFirstRowIndex, pageLastRowIndex, shouldUpdatePage, rows]);
+  if (isPaginated) {
+    rows = rows.slice(pagination.pageFirstRowIndex, pagination.pageLastRowIndex);
+  }
 
   return {
     hasHeader: columns.some((column) => Boolean(column.header.value)),
