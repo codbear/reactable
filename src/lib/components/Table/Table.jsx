@@ -24,6 +24,7 @@ const propTypes = {
   shouldUseSorting: PropTypes.bool,
   shouldUsePagination: PropTypes.bool,
   itemsPerPage: PropTypes.number,
+  itemsPerPageOptions: PropTypes.arrayOf(PropTypes.number),
 };
 
 const defaultProps = {
@@ -33,6 +34,7 @@ const defaultProps = {
   shouldUseSorting: false,
   shouldUsePagination: false,
   itemsPerPage: 0,
+  itemsPerPageOptions: [25, 50, 100],
 };
 
 const TableWrapper = styled.div`
@@ -76,6 +78,7 @@ const Table = ({
   shouldUseSorting,
   shouldUsePagination,
   itemsPerPage,
+  itemsPerPageOptions,
   onChangeItemsPerPage,
 }) => {
   const theme = useMemo(
@@ -107,7 +110,9 @@ const Table = ({
 
   return (
     <ThemeProvider theme={theme}>
-      <TableContext.Provider value={{ onSort, pagination, onChangeItemsPerPage }}>
+      <TableContext.Provider
+        value={{ onSort, pagination, onChangeItemsPerPage, itemsPerPageOptions }}
+      >
         <TableWrapper>
           <StyledTable>
             {hasHeader && (

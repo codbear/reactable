@@ -50,6 +50,7 @@ const Paginator = () => {
       pageLastRowIndex,
     },
     onChangeItemsPerPage,
+    itemsPerPageOptions,
   } = useContext(TableContext);
 
   const previousPageNumber = currentPage - 1;
@@ -72,10 +73,11 @@ const Paginator = () => {
           aria-labelledby="rowsPerPageLabel"
           onChange={(event) => onChangeItemsPerPage(event.target.value)}
         >
-          <option value={5}>5</option>
-          <option value={25}>25</option>
-          <option value={50}>50</option>
-          <option value={100}>100</option>
+          {itemsPerPageOptions.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
         </select>
       </DisplayableNumberOfRowsSelector>
 
