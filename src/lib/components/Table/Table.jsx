@@ -2,8 +2,9 @@ import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import styled, { ThemeProvider } from 'styled-components';
 
-import { useTable, useSorting, usePagination } from '../../hooks';
+import { useTable } from '../../hooks';
 import { TableContext } from '../../contexts';
+
 import TableCell from '../TableCell';
 import TableCellHeader from '../TableCellHeader';
 import Paginator from '../Paginator';
@@ -21,8 +22,6 @@ const propTypes = {
   variant: PropTypes.oneOf(['filled', 'outlined']),
   color: PropTypes.string,
   headerTextColor: PropTypes.string,
-  shouldUseSorting: PropTypes.bool,
-  shouldUsePagination: PropTypes.bool,
   itemsPerPage: PropTypes.number,
   itemsPerPageOptions: PropTypes.arrayOf(PropTypes.number),
 };
@@ -31,8 +30,6 @@ const defaultProps = {
   variant: 'outlined',
   color: '#c7c7c7',
   headerTextColor: '#000000',
-  shouldUseSorting: false,
-  shouldUsePagination: false,
   itemsPerPage: 0,
   itemsPerPageOptions: [25, 50, 100],
 };
@@ -75,8 +72,6 @@ const Table = ({
   variant,
   color,
   headerTextColor,
-  shouldUseSorting,
-  shouldUsePagination,
   itemsPerPage,
   itemsPerPageOptions,
   onChangeItemsPerPage,
@@ -93,17 +88,10 @@ const Table = ({
     [color, headerTextColor]
   );
 
-  const registeredServices = useMemo(() => {
-    return {
-      ...(shouldUseSorting ? { useSorting } : {}),
-      ...(shouldUsePagination ? { usePagination, itemsPerPage } : {}),
-    };
-  }, [itemsPerPage, shouldUsePagination, shouldUseSorting]);
-
   const { columns, rows, hasHeader, onSort, pagination } = useTable(
     data,
     userDefinedColumns,
-    registeredServices
+    itemsPerPage
   );
 
   const TableHeaderRow = variantToTableHeaderRow[variant];
@@ -136,7 +124,7 @@ const Table = ({
             </tbody>
           </StyledTable>
 
-          {shouldUsePagination && <Paginator />}
+          {itemsPerPage > 0 && <Paginator />}
         </TableWrapper>
       </TableContext.Provider>
     </ThemeProvider>
