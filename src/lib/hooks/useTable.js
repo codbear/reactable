@@ -5,17 +5,13 @@ import {
   getColumnsNextState,
   getRowsInitialState,
   sortRows,
+  filterRows,
 } from '../services';
 
-const useTable = (
-  data,
-  userDefinedColumns,
-  {
-    useSorting = () => ({ onSort: () => {} }),
-    usePagination = () => ({ pageFirstRowIndex: 0, pageLastRowIndex: 0, goToFirstPage: () => {} }),
-    itemsPerPage = 0,
-  }
-) => {
+import useSorting from './useSorting';
+import usePagination from './usePagination';
+
+const useTable = (data, userDefinedColumns, itemsPerPage) => {
   const tableInitialState = {
     columns: getColumnsInitialState(userDefinedColumns),
     rows: getRowsInitialState(data, userDefinedColumns),
@@ -23,6 +19,7 @@ const useTable = (
 
   const [columns, setColumns] = useState(tableInitialState.columns);
   const [sorting, setSorting] = useState({ column: null, order: null });
+  const [searchInput, setSearchInput] = useState('');
 
   const pagination = usePagination({
     itemsPerPage,
@@ -46,9 +43,11 @@ const useTable = (
 
   const { onSort } = useSorting(onSortRows);
 
-  let rows = sortRows(sorting.column, sorting.order, tableInitialState.rows);
+  let rows = filterRows(tableInitialState.rows, searchInput);
 
-  const isPaginated = Boolean(pagination.pageLastRowIndex);
+  rows = sortRows(sorting.column, sorting.order, rows);
+
+  const isPaginated = Boolean(itemsPerPage);
 
   if (isPaginated) {
     rows = rows.slice(pagination.pageFirstRowIndex, pagination.pageLastRowIndex);
@@ -60,6 +59,7 @@ const useTable = (
     rows,
     onSort,
     pagination,
+    onSearch: setSearchInput,
   };
 };
 
