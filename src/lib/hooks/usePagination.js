@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 const usePagination = ({ itemsPerPage, numberOfItems }) => {
-  const [currentPage, goToPage] = useState(0);
+  const [currentPage, goToPage] = useState(1);
 
   const numberOfFullPages = Math.trunc(numberOfItems / itemsPerPage);
   const hasPartialLastPage = Boolean(numberOfItems % itemsPerPage);
