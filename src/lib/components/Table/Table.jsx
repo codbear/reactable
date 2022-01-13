@@ -8,6 +8,7 @@ import { TableContext } from '../../contexts';
 import TableCell from '../TableCell';
 import TableCellHeader from '../TableCellHeader';
 import Paginator from '../Paginator';
+import SearchBar from '../SearchBar';
 
 const propTypes = {
   data: PropTypes.arrayOf(
@@ -24,6 +25,7 @@ const propTypes = {
   headerTextColor: PropTypes.string,
   itemsPerPage: PropTypes.number,
   itemsPerPageOptions: PropTypes.arrayOf(PropTypes.number),
+  hasSearchBar: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -32,6 +34,7 @@ const defaultProps = {
   headerTextColor: '#000000',
   itemsPerPage: 0,
   itemsPerPageOptions: [25, 50, 100],
+  hasSearchBar: false,
 };
 
 const TableWrapper = styled.div`
@@ -75,6 +78,7 @@ const Table = ({
   itemsPerPage,
   itemsPerPageOptions,
   onChangeItemsPerPage,
+  hasSearchBar,
 }) => {
   const theme = useMemo(
     () => ({
@@ -88,7 +92,7 @@ const Table = ({
     [color, headerTextColor]
   );
 
-  const { columns, rows, hasHeader, onSort, pagination } = useTable(
+  const { columns, rows, hasHeader, onSort, pagination, onSearch } = useTable(
     data,
     userDefinedColumns,
     itemsPerPage
@@ -99,8 +103,10 @@ const Table = ({
   return (
     <ThemeProvider theme={theme}>
       <TableContext.Provider
-        value={{ onSort, pagination, onChangeItemsPerPage, itemsPerPageOptions }}
+        value={{ onSort, pagination, onChangeItemsPerPage, itemsPerPageOptions, onSearch }}
       >
+        {hasSearchBar && <SearchBar />}
+
         <TableWrapper>
           <StyledTable>
             {hasHeader && (
