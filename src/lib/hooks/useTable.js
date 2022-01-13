@@ -21,9 +21,11 @@ const useTable = (data, userDefinedColumns, itemsPerPage) => {
   const [sorting, setSorting] = useState({ column: null, order: null });
   const [searchInput, setSearchInput] = useState('');
 
+  let rows = filterRows(tableInitialState.rows, searchInput);
+
   const pagination = usePagination({
     itemsPerPage,
-    numberOfItems: tableInitialState.rows.length,
+    numberOfItems: rows.length,
   });
 
   const onSortRows = (sortingColumn, sortingOrder) => {
@@ -42,8 +44,6 @@ const useTable = (data, userDefinedColumns, itemsPerPage) => {
   };
 
   const { onSort } = useSorting(onSortRows);
-
-  let rows = filterRows(tableInitialState.rows, searchInput);
 
   rows = sortRows(sorting.column, sorting.order, rows);
 
