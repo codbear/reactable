@@ -45,10 +45,10 @@ const usePagination = ({ itemsPerPage, numberOfItems }) => {
   }, [currentPage, numberOfPages]);
 
   useEffect(() => {
-    if (currentPage < 1) {
+    if (currentPage < 1 && numberOfPages > 0) {
       goToFirstPage();
     }
-  }, [currentPage]);
+  }, [currentPage, numberOfPages]);
 
   return {
     numberOfItems,
