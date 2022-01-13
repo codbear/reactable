@@ -31,11 +31,12 @@ Filled.args = {
   itemsPerPage: 0,
 };
 
-export const Filtering = Template.bind({});
-Filtering.args = {
+export const Searchable = Template.bind({});
+Searchable.args = {
   data: tableDataMock,
   columns: basicColumnsMock,
   itemsPerPage: 0,
+  hasSearchBar: true,
 };
 
 export const withSorting = Template.bind({});
