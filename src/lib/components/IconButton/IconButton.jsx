@@ -13,7 +13,7 @@ const StyledButton = styled.button`
 `;
 
 const propTypes = {
-  Icon: PropTypes.element.isRequired,
+  Icon: PropTypes.func.isRequired,
   disabled: PropTypes.bool,
   width: PropTypes.number,
   height: PropTypes.number,
