@@ -22,10 +22,11 @@
     "dist",
     "README.md"
   ],
-  "dependencies": {
+  "peerDependencies": {
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
-    "styled-components": "^5.3.3"
+    "styled-components": "^5.3.3",
+    "react-dom": "^17.0.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.0",
@@ -42,7 +43,6 @@
     "faker": "^5.5.3",
     "gh-pages": "^3.2.3",
     "prettier": "^2.4.1",
-    "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
     "use-reducer-logger": "^1.0.2"
   },
