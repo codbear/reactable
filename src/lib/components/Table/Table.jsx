@@ -92,11 +92,11 @@ const Table = ({
     [color, headerTextColor]
   );
 
-  const { columns, rows, hasHeader, onSort, pagination, onSearch } = useTable(
+  const { columns, rows, hasHeader, onSort, pagination, onSearch } = useTable({
     data,
     userDefinedColumns,
-    itemsPerPage
-  );
+    itemsPerPage,
+  });
 
   const TableHeaderRow = variantToTableHeaderRow[variant];
 

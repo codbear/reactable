@@ -6,10 +6,12 @@ const rowsMock = [
     props: { key: `row_0` },
     cells: [
       {
+        columnIndex: 'column_0',
         props: { key: `row_0_column_0` },
         value: 'Tony Stark',
       },
       {
+        columnIndex: 'column_1',
         props: { key: `row_0_column_1` },
         value: 'Iron Man',
       },
@@ -19,10 +21,12 @@ const rowsMock = [
     props: { key: `row_1` },
     cells: [
       {
+        columnIndex: 'column_0',
         props: { key: `row_1_column_0` },
         value: 'Natalia Romanova',
       },
       {
+        columnIndex: 'column_1',
         props: { key: `row_1_column_1` },
         value: 'Black Widow',
       },
@@ -32,10 +36,12 @@ const rowsMock = [
     props: { key: `row_2` },
     cells: [
       {
+        columnIndex: 'column_0',
         props: { key: `row_2_column_0` },
         value: 'Peter Parker',
       },
       {
+        columnIndex: 'column_1',
         props: { key: `row_2_column_1` },
         value: 'Spider Man',
       },

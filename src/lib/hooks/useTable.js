@@ -4,14 +4,20 @@ import {
   getColumnsInitialState,
   getColumnsNextState,
   getRowsInitialState,
-  sortRows,
-  filterRows,
+  sortRows as defaultSortRows,
+  filterRows as defaultFilterRows,
 } from '../services';
 
 import useSorting from './useSorting';
 import usePagination from './usePagination';
 
-const useTable = (data, userDefinedColumns, itemsPerPage) => {
+const useTable = ({
+  data,
+  userDefinedColumns,
+  itemsPerPage,
+  filterRows = defaultFilterRows,
+  sortRows = defaultSortRows,
+}) => {
   const tableInitialState = {
     columns: getColumnsInitialState(userDefinedColumns),
     rows: getRowsInitialState(data, userDefinedColumns),
