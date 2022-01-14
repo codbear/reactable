@@ -31,8 +31,8 @@ Filled.args = {
   itemsPerPage: 0,
 };
 
-export const Searchable = Template.bind({});
-Searchable.args = {
+export const withSearchBar = Template.bind({});
+withSearchBar.args = {
   data: tableDataMock,
   columns: basicColumnsMock,
   itemsPerPage: 0,
@@ -51,4 +51,12 @@ withPagination.args = {
   data: tableDataMock,
   columns: basicColumnsMock,
   itemsPerPageOptions: [5, 10, 25, 50, 100],
+};
+
+export const withEverything = Template.bind({});
+withEverything.args = {
+  data: tableDataMock,
+  columns: sortingColumnsMock,
+  itemsPerPageOptions: [5, 10, 25, 50, 100],
+  hasSearchBar: true,
 };
