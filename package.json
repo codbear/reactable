@@ -1,6 +1,6 @@
 {
   "name": "@codbear/reactable",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "codbear (https://github.com/codbear)",
   "description": "Create data tables with React",
   "keywords": [
