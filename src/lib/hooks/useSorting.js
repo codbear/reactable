@@ -6,8 +6,8 @@ const useSorting = (onSortRows) => {
   const [sortingColumn, setSortingColumn] = useState();
   const [sortingOrder, setSortingOrder] = useState(SORTING_ORDER_STATES.DEFAULT);
 
-  const initSorting = (columnKey) => {
-    setSortingColumn(columnKey);
+  const initSorting = (columnIndex) => {
+    setSortingColumn(columnIndex);
     setSortingOrder(SORTING_ORDER_STATES.DEFAULT);
 
     return SORTING_ORDER_STATES.DEFAULT;
@@ -29,12 +29,12 @@ const useSorting = (onSortRows) => {
     setSortingOrder(SORTING_ORDER_STATES.DEFAULT);
   };
 
-  const onSort = (columnKey) => {
+  const onSort = (columnIndex) => {
     // First click on column header.
-    if (sortingColumn !== columnKey) {
-      const sortingOrder = initSorting(columnKey);
+    if (sortingColumn !== columnIndex) {
+      const sortingOrder = initSorting(columnIndex);
 
-      return onSortRows(columnKey, sortingOrder);
+      return onSortRows(columnIndex, sortingOrder);
     }
 
     // Second click on column header.

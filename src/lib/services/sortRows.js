@@ -1,6 +1,5 @@
 import { SORTING_ORDER_STATES } from '../constants';
 
-// TODO: even with identical values, rows are updated
 const compareGreaterThan = (item, nextItem) => {
   if (item.value > nextItem.value) {
     return 1;
@@ -36,9 +35,7 @@ const sortRows = (sortingColumn, sortingOrder, rows) => {
   }
 
   const minifiedRows = rows.map((row, rowIndex) => {
-    const cellToSort = row.cells.find(
-      (cell) => cell.props.key === `row_${rowIndex}_${sortingColumn}`
-    );
+    const cellToSort = row.cells.find((cell) => cell.columnIndex === sortingColumn);
     const { value } = cellToSort;
 
     const isValueToCompareString = typeof value === 'string';

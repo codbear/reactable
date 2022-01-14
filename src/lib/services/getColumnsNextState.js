@@ -11,7 +11,7 @@ const getAriaDescription = (sortingOrder) => {
 
 const getColumnsNextState = (columns, { sortingColumn, sortingOrder }) => {
   return columns.map((column) => {
-    const isSorted = column.props.header.key === sortingColumn;
+    const isSorted = column.index === sortingColumn;
     const sortingOrderForColumn = isSorted && sortingOrder;
     const sortingButtonProps = {
       ...column.props.sortingButton,

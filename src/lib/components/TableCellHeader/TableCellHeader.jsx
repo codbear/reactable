@@ -61,18 +61,15 @@ const TableCellHeader = ({ column }) => {
     sortingOrder,
     header: { value },
     props,
+    index,
   } = column;
 
   const { onSort } = useContext(TableContext);
 
-  const handleClickOnSortButton = () => {
-    onSort(props.header.key);
-  };
-
   return (
     <StyledTableCellHeader as="th">
       {isSortable ? (
-        <SortingButton onClick={handleClickOnSortButton} {...props.sortingButton}>
+        <SortingButton onClick={() => onSort(index)} {...props.sortingButton}>
           {value}
 
           <SortIcon sortingOrder={sortingOrder} />
