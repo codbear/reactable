@@ -11,6 +11,7 @@ const getColumnsInitialState = (columns) => {
         value: header,
       },
       isSortable: Boolean(isSortable),
+      index: `column_${index}`,
       props: {
         header: { key: `column_${index}` },
         ...(isSortable ? { sortingButton: sortingButtonProps } : {}),

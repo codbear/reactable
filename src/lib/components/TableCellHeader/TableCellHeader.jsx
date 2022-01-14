@@ -1,9 +1,11 @@
+import { useContext } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
+import SortIcon from '../../icons/SortIcon';
 import TableCell from '../TableCell';
-import SortIcon from '../SortIcon';
 import { SORTING_ORDER_STATES } from '../../constants';
+import { TableContext } from '../../contexts';
 
 const propTypes = {
   column: PropTypes.shape({
@@ -53,22 +55,21 @@ const SortingButton = styled.button`
   }
 `;
 
-const TableCellHeader = ({ column, onSort }) => {
+const TableCellHeader = ({ column }) => {
   const {
     isSortable,
     sortingOrder,
     header: { value },
     props,
+    index,
   } = column;
 
-  const handleSort = () => {
-    onSort(props.header.key);
-  };
+  const { onSort } = useContext(TableContext);
 
   return (
     <StyledTableCellHeader as="th">
       {isSortable ? (
-        <SortingButton onClick={handleSort} {...props.sortingButton}>
+        <SortingButton onClick={() => onSort(index)} {...props.sortingButton}>
           {value}
 
           <SortIcon sortingOrder={sortingOrder} />

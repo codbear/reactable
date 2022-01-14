@@ -7,6 +7,7 @@ const columnsMock = [
       value: 'Super hero',
     },
     isSortable: true,
+    index: 'column_1',
     props: {
       header: { key: 'column_1' },
     },
@@ -16,6 +17,7 @@ const columnsMock = [
       value: 'Name',
     },
     isSortable: true,
+    index: 'column_2',
     props: {
       header: { key: 'column_2' },
     },

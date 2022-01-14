@@ -1,17 +1,14 @@
 import { useState } from 'react';
 
-import { getSortRows } from '../services';
 import { SORTING_ORDER_STATES } from '../constants';
 
-const useSorting = (onRowsSort, onColumnOrder) => {
+const useSorting = (onSortRows) => {
   const [sortingColumn, setSortingColumn] = useState();
   const [sortingOrder, setSortingOrder] = useState(SORTING_ORDER_STATES.DEFAULT);
 
-  const initSorting = (columnKey) => {
-    setSortingColumn(columnKey);
+  const initSorting = (columnIndex) => {
+    setSortingColumn(columnIndex);
     setSortingOrder(SORTING_ORDER_STATES.DEFAULT);
-
-    onColumnOrder(columnKey, SORTING_ORDER_STATES.DEFAULT);
 
     return SORTING_ORDER_STATES.DEFAULT;
   };
@@ -24,42 +21,38 @@ const useSorting = (onRowsSort, onColumnOrder) => {
 
     setSortingOrder(nextSortingOrder);
 
-    onColumnOrder(sortingColumn, nextSortingOrder);
-
     return nextSortingOrder;
   };
 
   const disableSorting = () => {
     setSortingColumn(null);
     setSortingOrder(SORTING_ORDER_STATES.DEFAULT);
-
-    onColumnOrder(null, null);
   };
 
-  const handleSort = (columnKey) => {
-    if (sortingColumn !== columnKey) {
-      const sortingOrder = initSorting(columnKey);
-      const sortRows = getSortRows(columnKey, sortingOrder);
+  const onSort = (columnIndex) => {
+    // First click on column header.
+    if (sortingColumn !== columnIndex) {
+      const sortingOrder = initSorting(columnIndex);
 
-      return onRowsSort(sortRows);
+      return onSortRows(columnIndex, sortingOrder);
     }
 
+    // Second click on column header.
     if (sortingOrder === SORTING_ORDER_STATES.ASCENDANT) {
-      // TODO: Can I be sure the state will be updated before I call getSortRows?
       const nextSortingOrder = reverseSorting();
-      const sortRows = getSortRows(sortingColumn, nextSortingOrder);
 
-      return onRowsSort(sortRows);
+      return onSortRows(sortingColumn, nextSortingOrder);
     }
 
+    // Third click on column header.
     if (sortingOrder === SORTING_ORDER_STATES.DESCENDANT) {
       disableSorting();
 
-      return onRowsSort();
+      return onSortRows();
     }
   };
 
-  return handleSort;
+  return { onSort };
 };
 
 export default useSorting;

@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 
 import UnsortedIcon from '../UnsortedIcon';
-import SortedAscIcon from '../SortedAscIcon';
-import SortedDescIcon from '../SortedDescIcon';
+import ChevronUpIcon from '../ChevronUpIcon';
+import ChevronDownIcon from '../ChevronDownIcon';
 import { SORTING_ORDER_STATES } from '../../constants';
 
 const propTypes = {
@@ -17,8 +17,8 @@ const defaultProps = {
 };
 
 const sortingOrderToSortingIcon = {
-  [SORTING_ORDER_STATES.ASCENDANT]: SortedAscIcon,
-  [SORTING_ORDER_STATES.DESCENDANT]: SortedDescIcon,
+  [SORTING_ORDER_STATES.ASCENDANT]: ChevronUpIcon,
+  [SORTING_ORDER_STATES.DESCENDANT]: ChevronDownIcon,
 };
 
 const SortIcon = ({ sortingOrder }) => {

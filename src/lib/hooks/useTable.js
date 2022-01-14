@@ -1,33 +1,71 @@
 import { useState } from 'react';
 
-import { getColumnsInitialState, getColumnsNextState, getRowsInitialState } from '../services';
+import {
+  getColumnsInitialState,
+  getColumnsNextState,
+  getRowsInitialState,
+  sortRows as defaultSortRows,
+  filterRows as defaultFilterRows,
+} from '../services';
 
-const voidUseSorting = () => () => {};
+import useSorting from './useSorting';
+import usePagination from './usePagination';
 
-const useTable = (data, userDefinedColumns, { useSorting = voidUseSorting }) => {
-  const [columns, setColumns] = useState(getColumnsInitialState(userDefinedColumns));
-  const [rows, setRows] = useState(getRowsInitialState(data, userDefinedColumns));
+const useTable = ({
+  data,
+  userDefinedColumns,
+  itemsPerPage,
+  filterRows = defaultFilterRows,
+  sortRows = defaultSortRows,
+}) => {
+  const tableInitialState = {
+    columns: getColumnsInitialState(userDefinedColumns),
+    rows: getRowsInitialState(data, userDefinedColumns),
+  };
 
-  const onColumnOrder = (sortingColumn, sortingOrder) => {
+  const [columns, setColumns] = useState(tableInitialState.columns);
+  const [sorting, setSorting] = useState({ column: null, order: null });
+  const [searchInput, setSearchInput] = useState('');
+
+  let rows = filterRows(tableInitialState.rows, searchInput);
+
+  const pagination = usePagination({
+    itemsPerPage,
+    numberOfItems: rows.length,
+  });
+
+  const onSortRows = (sortingColumn, sortingOrder) => {
+    pagination.goToFirstPage();
+
     const nextColumnState = getColumnsNextState(columns, { sortingColumn, sortingOrder });
     setColumns(nextColumnState);
+
+    const shouldSortRows = Boolean(sortingColumn) && Boolean(sortingOrder);
+
+    if (!shouldSortRows) {
+      return setSorting({ column: null, order: null });
+    }
+
+    setSorting({ column: sortingColumn, order: sortingOrder });
   };
 
-  const handleSetRows = (rowsAdapter) => {
-    const rowsInitialState = getRowsInitialState(data, userDefinedColumns);
-    const shouldAdaptRows = typeof rowsAdapter === 'function';
-    const nextRowsState = shouldAdaptRows ? rowsAdapter(rowsInitialState) : rowsInitialState;
+  const { onSort } = useSorting(onSortRows);
 
-    setRows(nextRowsState);
-  };
+  rows = sortRows(sorting.column, sorting.order, rows);
 
-  const onSort = useSorting(handleSetRows, onColumnOrder);
+  const isPaginated = Boolean(itemsPerPage);
+
+  if (isPaginated) {
+    rows = rows.slice(pagination.pageFirstRowIndex, pagination.pageLastRowIndex);
+  }
 
   return {
     hasHeader: columns.some((column) => Boolean(column.header.value)),
     columns,
     rows,
     onSort,
+    pagination,
+    onSearch: setSearchInput,
   };
 };
 

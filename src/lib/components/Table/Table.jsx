@@ -2,36 +2,39 @@ import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import styled, { ThemeProvider } from 'styled-components';
 
-import { useTable, useSorting as useDefaultSorting } from '../../hooks';
+import { useTable } from '../../hooks';
+import { TableContext } from '../../contexts';
+
 import TableCell from '../TableCell';
 import TableCellHeader from '../TableCellHeader';
+import Paginator from '../Paginator';
+import SearchBar from '../SearchBar';
 
 const propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number]))
   ).isRequired,
-
   columns: PropTypes.arrayOf(
     PropTypes.shape({
       dataField: PropTypes.string.isRequired,
       isSortable: PropTypes.bool,
     })
   ).isRequired,
-
   variant: PropTypes.oneOf(['filled', 'outlined']),
-
   color: PropTypes.string,
-
   headerTextColor: PropTypes.string,
-
-  useSorting: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
+  itemsPerPage: PropTypes.number,
+  itemsPerPageOptions: PropTypes.arrayOf(PropTypes.number),
+  hasSearchBar: PropTypes.bool,
 };
 
 const defaultProps = {
   variant: 'outlined',
   color: '#c7c7c7',
   headerTextColor: '#000000',
-  useSorting: false,
+  itemsPerPage: 0,
+  itemsPerPageOptions: [25, 50, 100],
+  hasSearchBar: false,
 };
 
 const TableWrapper = styled.div`
@@ -39,7 +42,7 @@ const TableWrapper = styled.div`
   overflow: auto;
 `;
 
-const TableContainer = styled.table`
+const StyledTable = styled.table`
   width: 100%;
   border: 1px solid ${({ theme }) => theme.palette.divider};
   border-collapse: collapse;
@@ -72,7 +75,10 @@ const Table = ({
   variant,
   color,
   headerTextColor,
-  useSorting,
+  itemsPerPage,
+  itemsPerPageOptions,
+  onChangeItemsPerPage,
+  hasSearchBar,
 }) => {
   const theme = useMemo(
     () => ({
@@ -86,49 +92,47 @@ const Table = ({
     [color, headerTextColor]
   );
 
-  const registeredServices = useMemo(() => {
-    const shouldUseSorting = useSorting !== false;
-    const shouldUseCustomSorting = shouldUseSorting && typeof useSorting === 'function';
-    const sortingHook = shouldUseCustomSorting ? useSorting : useDefaultSorting;
-
-    return {
-      ...(shouldUseSorting ? { useSorting: sortingHook } : {}),
-    };
-  }, [useSorting]);
-
-  const { columns, rows, hasHeader, onSort } = useTable(
+  const { columns, rows, hasHeader, onSort, pagination, onSearch } = useTable({
     data,
     userDefinedColumns,
-    registeredServices
-  );
+    itemsPerPage,
+  });
 
   const TableHeaderRow = variantToTableHeaderRow[variant];
 
   return (
     <ThemeProvider theme={theme}>
-      <TableWrapper>
-        <TableContainer>
-          {hasHeader && (
-            <thead>
-              <TableHeaderRow>
-                {columns.map((column) => (
-                  <TableCellHeader column={column} onSort={onSort} {...column.props.header} />
-                ))}
-              </TableHeaderRow>
-            </thead>
-          )}
+      <TableContext.Provider
+        value={{ onSort, pagination, onChangeItemsPerPage, itemsPerPageOptions, onSearch }}
+      >
+        {hasSearchBar && <SearchBar />}
 
-          <tbody>
-            {rows.map((row) => (
-              <TableRow {...row.props}>
-                {row.cells.map((cell) => (
-                  <TableCell {...cell.props}>{cell.value}</TableCell>
-                ))}
-              </TableRow>
-            ))}
-          </tbody>
-        </TableContainer>
-      </TableWrapper>
+        <TableWrapper>
+          <StyledTable>
+            {hasHeader && (
+              <thead>
+                <TableHeaderRow>
+                  {columns.map((column) => (
+                    <TableCellHeader column={column} {...column.props.header} />
+                  ))}
+                </TableHeaderRow>
+              </thead>
+            )}
+
+            <tbody>
+              {rows.map((row) => (
+                <TableRow {...row.props}>
+                  {row.cells.map((cell) => (
+                    <TableCell {...cell.props}>{cell.value}</TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </tbody>
+          </StyledTable>
+
+          {pagination.numberOfPages > 0 && <Paginator />}
+        </TableWrapper>
+      </TableContext.Provider>
     </ThemeProvider>
   );
 };
