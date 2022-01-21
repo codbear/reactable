@@ -7,7 +7,7 @@ const columnsMock = [
       value: 'Super hero',
     },
     isSortable: true,
-    index: 'column_1',
+    index: 0,
     props: {
       header: { key: 'column_1' },
     },
@@ -17,7 +17,7 @@ const columnsMock = [
       value: 'Name',
     },
     isSortable: true,
-    index: 'column_2',
+    index: 1,
     props: {
       header: { key: 'column_2' },
     },
@@ -27,7 +27,7 @@ const columnsMock = [
 describe('Get columns next state service', () => {
   it('should return columns decorated with sorting props', function () {
     const sortedColumns = getColumnsNextState(columnsMock, {
-      sortingColumn: 'column_2',
+      sortingColumn: 1,
       sortingOrder: SORTING_ORDER_STATES.ASCENDANT,
     });
 

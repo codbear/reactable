@@ -40,7 +40,7 @@ const useTable = ({
     const nextColumnState = getColumnsNextState(columns, { sortingColumn, sortingOrder });
     setColumns(nextColumnState);
 
-    const shouldSortRows = Boolean(sortingColumn) && Boolean(sortingOrder);
+    const shouldSortRows = sortingColumn !== null && sortingOrder !== null;
 
     if (!shouldSortRows) {
       return setSorting({ column: null, order: null });
