@@ -35,7 +35,9 @@ const sortRows = (sortingColumn, sortingOrder, rows) => {
   }
 
   const minifiedRows = rows.map((row, rowIndex) => {
-    const cellToSort = row.cells.find((cell) => cell.columnIndex === sortingColumn);
+    const cellToSort = row.cells.find((cell) => {
+      return cell.columnIndex === sortingColumn;
+    });
     const { value } = cellToSort;
 
     const isValueToCompareString = typeof value === 'string';

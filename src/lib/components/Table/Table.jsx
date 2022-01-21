@@ -130,7 +130,7 @@ const Table = ({
             </tbody>
           </StyledTable>
 
-          {pagination.numberOfPages > 0 && <Paginator />}
+          {Boolean(itemsPerPage) && pagination.numberOfPages > 0 && <Paginator />}
         </TableWrapper>
       </TableContext.Provider>
     </ThemeProvider>
