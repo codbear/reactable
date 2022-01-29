@@ -2,6 +2,8 @@
 
 Create data tables with React
 
+https://www.npmjs.com/package/@codbear/reactable
+
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/codbear/reactable?style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/codbear/reactable?color=97c423&style=for-the-badge)
 
