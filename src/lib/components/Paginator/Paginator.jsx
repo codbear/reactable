@@ -71,7 +71,7 @@ const Paginator = () => {
           name="rowsPerPage"
           id="rowsPerPageSelect"
           aria-labelledby="rowsPerPageLabel"
-          onChange={(event) => onChangeItemsPerPage(event.target.value)}
+          onChange={(event) => onChangeItemsPerPage(+event.target.value)}
         >
           {itemsPerPageOptions.map((option) => (
             <option key={option} value={option}>
