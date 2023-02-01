@@ -32,7 +32,7 @@ const propTypes = {
       secondary: PropTypes.string,
       divider: PropTypes.string,
       text: PropTypes.string,
-    })
+    }),
   }),
   isThemeDisabled: PropTypes.boolean,
 };
@@ -50,7 +50,7 @@ const defaultProps = {
       secondary: '#fafafa',
       divider: '#e5e8ec',
       text: '#000000',
-    }
+    },
   },
   isThemeDisabled: false,
 };
@@ -93,8 +93,8 @@ const disabledTheme = {
     secondary: '',
     divider: '',
     text: '',
-  }
-}
+  },
+};
 
 const Table = ({
   data,
@@ -107,18 +107,29 @@ const Table = ({
   onChangeItemsPerPage,
   hasSearchBar,
   theme,
-  isThemeDisabled
+  isThemeDisabled,
 }) => {
   const memoizedTheme = useMemo(
-    () => isThemeDisabled ? disabledTheme : {
-      palette: {
-        primary: color || theme.palette.primary,
-        secondary: theme.palette.secondary,
-        divider: theme.palette.divider,
-        text: headerTextColor || theme.palette.text,
-      },
-    },
-    [color, headerTextColor, isThemeDisabled, theme.palette.divider, theme.palette.primary, theme.palette.secondary, theme.palette.text]
+    () =>
+      isThemeDisabled
+        ? disabledTheme
+        : {
+            palette: {
+              primary: color || theme.palette.primary,
+              secondary: theme.palette.secondary,
+              divider: theme.palette.divider,
+              text: headerTextColor || theme.palette.text,
+            },
+          },
+    [
+      color,
+      headerTextColor,
+      isThemeDisabled,
+      theme.palette.divider,
+      theme.palette.primary,
+      theme.palette.secondary,
+      theme.palette.text,
+    ]
   );
 
   const { columns, rows, hasHeader, onSort, pagination, onSearch } = useTable({
