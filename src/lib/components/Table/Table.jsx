@@ -26,15 +26,33 @@ const propTypes = {
   itemsPerPage: PropTypes.number,
   itemsPerPageOptions: PropTypes.arrayOf(PropTypes.number),
   hasSearchBar: PropTypes.bool,
+  theme: PropTypes.shape({
+    palette: PropTypes.shape({
+      primary: PropTypes.string,
+      secondary: PropTypes.string,
+      divider: PropTypes.string,
+      text: PropTypes.string,
+    })
+  }),
+  isThemeDisabled: PropTypes.boolean,
 };
 
 const defaultProps = {
   variant: 'outlined',
-  color: '#c7c7c7',
-  headerTextColor: '#000000',
+  color: '',
+  headerTextColor: '',
   itemsPerPage: 0,
   itemsPerPageOptions: [25, 50, 100],
   hasSearchBar: false,
+  theme: {
+    palette: {
+      primary: '#c7c7c7',
+      secondary: '#fafafa',
+      divider: '#e5e8ec',
+      text: '#000000',
+    }
+  },
+  isThemeDisabled: false,
 };
 
 const TableWrapper = styled.div`
@@ -69,6 +87,15 @@ const variantToTableHeaderRow = {
   filled: TableHeaderRowFilled,
 };
 
+const disabledTheme = {
+  palette: {
+    primary: '',
+    secondary: '',
+    divider: '',
+    text: '',
+  }
+}
+
 const Table = ({
   data,
   columns: userDefinedColumns,
@@ -79,17 +106,19 @@ const Table = ({
   itemsPerPageOptions,
   onChangeItemsPerPage,
   hasSearchBar,
+  theme,
+  isThemeDisabled
 }) => {
-  const theme = useMemo(
-    () => ({
+  const memoizedTheme = useMemo(
+    () => isThemeDisabled ? disabledTheme : {
       palette: {
-        primary: color,
-        secondary: '#fafafa',
-        divider: '#e5e8ec',
-        text: headerTextColor,
+        primary: color || theme.palette.primary,
+        secondary: theme.palette.secondary,
+        divider: theme.palette.divider,
+        text: headerTextColor || theme.palette.text,
       },
-    }),
-    [color, headerTextColor]
+    },
+    [color, headerTextColor, isThemeDisabled, theme.palette.divider, theme.palette.primary, theme.palette.secondary, theme.palette.text]
   );
 
   const { columns, rows, hasHeader, onSort, pagination, onSearch } = useTable({
@@ -101,7 +130,7 @@ const Table = ({
   const TableHeaderRow = variantToTableHeaderRow[variant];
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={memoizedTheme}>
       <TableContext.Provider
         value={{ onSort, pagination, onChangeItemsPerPage, itemsPerPageOptions, onSearch }}
       >
