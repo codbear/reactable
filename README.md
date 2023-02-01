@@ -7,6 +7,10 @@ https://www.npmjs.com/package/@codbear/reactable
 ![GitHub package.json version](https://img.shields.io/github/package-json/v/codbear/reactable?style=for-the-badge)
 ![GitHub](https://img.shields.io/github/license/codbear/reactable?color=97c423&style=for-the-badge)
 
+## Requirements
++ react 17.0.2 (This library use hooks under the hood)
++ styled-components 5.3.3,
+
 ## Installation
 
 ```bash
@@ -161,15 +165,28 @@ const SuperHerosTable = () => {
 
 [See demo in StoryBook](https://codbear.github.io/reactable/?path=/story/table--with-search-bar)
 
-### Custom table
+### Custom theming
 
-If the default style of the Table component don't fit your needs, or if you want more control over your table, you can use the `useTable` hook.
+You can provide a theme to the Table component if you want to override default theme. For now only the palette can be overrided.
 ```jsx
-import { useTable } from '@codbear/reactable';
+<Table 
+  theme={{
+    palette: {
+      primary: '#ffffff', // The color applied to header background
+      secondary: '#c7c7c7', // The color applied to row background on hover
+      divider: '#000000', // The color applied to borders
+      text: '#000000', // The color applied to text content
+    }
+  }}
+/>
 ```
 
-You have to specify data and columns, itemsPerPage (0 if you don't want pagination).
-You can also specify custom `sortRows` and `filterRows` services.
+The `color` and `headerTextColor` props are now deprecated and should not be used anymore.
+
+You can completely disable theming (palette only) with `isThemeDisabled`.
+```jsx
+<Table isThemeDisabled />
+```
 
 [See how it's implemented in Table component](https://github.com/codbear/reactable/blob/main/src/lib/components/Table/Table.jsx)
 
