@@ -34,7 +34,7 @@ const propTypes = {
       text: PropTypes.string,
     }),
   }),
-  isThemeDisabled: PropTypes.boolean,
+  isThemeDisabled: PropTypes.bool,
 };
 
 const defaultProps = {
